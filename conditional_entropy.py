@@ -43,9 +43,14 @@ def get_files(data):
 	Get the correct path of file or files inside a directory
 	'''
 	if os.path.isfile(data):
+	#if os.path.isfile(os.path.abspath(os.path.basename(data)))
 		return [data]
-	elif os.path.isdir(os.path.join(os.getcwd(),data)):
-		path = os.path.join(os.getcwd(),data)
+		#os.chdir(os.path.dirname(os.path.abspath(data)))
+		#return os.path.basename(data)
+	#elif os.path.isdir(os.path.join(os.getcwd(),data)):
+		#path = os.path.join(os.getcwd(),data)
+	elif os.path.isdir(os.path.abspath(data)):
+		path = os.path.abspath(data)
 		os.chdir(path)
 		list_of_files = os.listdir(path)
 		return sorted(list_of_files)
@@ -138,6 +143,7 @@ def main():
 							args.precision)
     
 	for star in files:
+		#print(star)
 		ent_data = []
 		ce_period = []
 		data = np.ma.array(np.loadtxt(star), mask=None, dtype=float)
@@ -148,10 +154,11 @@ def main():
         									args.mag_bins))
 			ce_period.append(p)
             
-		np.savetxt(os.path.join(out, 'entropies_'+star+'.dat'),
+		np.savetxt(os.path.join(out,
+				'entropies_'+os.path.basename(star)+'.txt'),
     			np.dstack((ce_period, ent_data))[0],
     			fmt='%s')
-		right_period = star, ce_period[np.argmin(ent_data)]
+		right_period = star, ce_period[np.argmin(ent_data)] ###mudar aqui para os.path.basename()
 		ce.append(right_period)
 		np.savetxt(os.path.join(out, 'results.dat'), ce, fmt='%s')
 
