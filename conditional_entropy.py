@@ -115,9 +115,11 @@ def cond_entropy(period, data, p_bins=10, m_bins=5):
 	if size > 0:
 		divided_bins = bins / size
 		arg_positive = divided_bins > 0
-		column_sums = np.sum(divided_bins, axis=0)
-		column_sums = np.repeat(np.reshape(column_sums, (1,-1)),
-								p_bins, axis=0)
+		column_sums = np.sum(divided_bins, axis=1) #change 0 by 1
+		column_sums = np.repeat(np.reshape(column_sums,(p_bins,1)), 
+								m_bins, axis=1)
+		#column_sums = np.repeat(np.reshape(column_sums, (1,-1)),
+		#						p_bins, axis=0)
 
 		select_divided_bins = divided_bins[arg_positive]
 		select_column_sums  = column_sums[arg_positive]
